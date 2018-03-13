@@ -1,0 +1,35 @@
+//////////////////////////////////NO FALL DAMAGE//////////////////////////////////////////
+        DWORD NoFallDamage = *(DWORD*)(oCShell + FallDamage);
+        if(NFD)
+        {
+        *(float*)(NoFallDamage + FallDamageOffset) = 0;
+        *(float*)(DistFallDamageStartFrom + FallDamageOffset) = 0;
+        *(float*)((Knockback + FallDamageOffset) + Knockback_Pointer) = 0;
+
+        }
+        ////////////////////////////////////NO BUG DAMAGE/////////////////////////////////////////
+        if(NBD)
+        {
+        *(float*)(VisibleZoneIndex + oCShell) = 0;
+        *(float*)(DamageZone + oCShell) = 0;
+        *(float*)(DamagePerSec + oCShell) = 0;
+        *(float*)(DamagePerMeter + oCShell) = 0;
+        *(float*)(Zoneman + oCShell) = 0;
+        *(float*)(Eatman + oCShell) = 0;
+        *(float*)(EatmanName + oCShell) = 0;
+        *(float*)(versioncode + oCShell) = 0;   
+        *(float*)(TargetZone + oCShell) = 0;
+        *(float*)(PointIndex + oCShell) = 0;
+        *(float*)(Floor + oCShell) = 0;
+        *(float*)(FloorNameMsgIndex + oCShell) = 0;
+        *(float*)(world + oCShell) = 0;
+        *(float*)(PointList + oCShell) = 0;
+        *(float*)(Normal + oCShell) = 0;
+        *(float*)(Dist + oCShell) = 0;
+        *(float*)(Rot + oCShell) = 0;
+        *(float*)(Pos + oCShell) = 0;
+        *(float*)(Point + oCShell) = 0;
+        *(float*)(EditPoly + oCShell) = 0;
+        *(float*)(PolyList + oCShell) = 0;
+        *(float*)(Name + oCShell) = 0;
+        *(float*)(MaxDepth + oCShell) = 0;

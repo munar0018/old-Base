@@ -1,0 +1,198 @@
+#include <Windows.h>
+
+#define KnifeNormalAngle 0x138C
+#define KnifeBigshotAngle 0x13BC
+#define PlayerClient 0x1089738
+#define PlayerClientOffset 0x70
+#define gravity 0x09D8
+#define WallMgr 0x225EB80
+    #define SG1 0x9C
+    #define SG2 0xA0
+    #define SG3 0xA4
+    #define    Wallarray 0x475234
+    #define    WallArrayOffset 0xA
+    #define ModelNode 0x225EAC4
+    #define MNodeDimension_x 0xD4
+    #define MNodeDimension_y 0xD8
+    #define MNodeDimension_z 0xDC
+    #define FallDamage 0x225EB78
+    #define FallDamageOffset 0x4
+    #define dw_pCLTPlayerClient 0x1089738
+    #define CLTPlayerClientOffset  0x70
+    #define WeaponMgr 0x225EB98
+    #define pitch 0x4C8
+    #define yaw 0x4CC
+    #define Texture 0x594
+    #define EdgeShotEnabled 0x568
+    #define WallShotEnabled 0x56C
+    #define PerfectWallShotEnabled 0x570
+    #define BasicPlayerInfo 0xBF97A8
+    #define ZoneMan 0x215
+    #define DamageZone 0xCA0F04
+    #define DamagePerSec 0xCA0EF4
+    #define VisibleZoneIndex 0xCA0E4C
+    #define MovementWalkRate 0x418D35
+    #define MoveSpeedPenalty 0x1225EB9C //0x1225EB98 0x10BF96EC 0x10BF97A8
+#define nr 0x671C
+#define nr1 0x63DC
+#define nr2 0x6720
+#define nr3 0x6724
+#define nr4 0x194C
+#define nr5 0x1AB4
+#define dw_pCLTPLayerClient 0x1089738//0x10614CC
+    bool AutoHead = false;
+    bool SKHead = false;
+    bool WallHack = false;
+    bool SeeGhost = false;
+    bool NFD = true;
+    bool NBD = true;
+    bool STWS = false;
+    bool Knife360  = false;
+    bool NR = false;
+    void Hack()
+    {//
+       
+        DWORD oCShell = (DWORD)GetModuleHandleA("CShell.dll");
+        DWORD oClientFX = (DWORD)GetModuleHandleA("ClientFx.fxd");
+       
+       
+           
+       
+        /////////////////////////////////////WALLHACK/////////////////////////////////////////
+        DWORD pWallarray = *(DWORD*)(Wallarray + WallArrayOffset);
+        if (GetAsyncKeyState(VK_F1) & 1) WallHack = (!WallHack);
+        if (WallHack)
+        {
+            memcpy((PVOID)(pWallarray + 0xA4), (PBYTE)"\x90\x90\x90\x90\x90\x90", 6);
+        }
+        else
+        {
+            memcpy((PVOID)(pWallarray + 0xA4), (PBYTE)"\x01\x01\x01\x01\x01\x01", 6);
+        }
+        /////////////////////////////////////SEE GHOST///////////////////////////////////////
+        if (GetAsyncKeyState(VK_F2) & 1) SeeGhost = (!SeeGhost);
+        if (WallHack)
+        {
+            *(DWORD*)(pWallarray + 0xB8) = 0xE;
+        }
+        else
+        {
+            *(DWORD*)(pWallarray + 0xB8) = 5;
+        }
+        ///////////////////////////////SUPERKILL AOE DAMAGE HEAD////////////////////////////////////
+        DWORD pHeadShotMgr = *( DWORD* )( oCShell + ModelNode );
+        if (pHeadShotMgr != 0)
+        {
+        if(GetAsyncKeyState(VK_F3) &1) SKHead=(!SKHead);
+        if (SKHead)
+        {
+        int onvalue = 180.0f;
+        *(float*)(pHeadShotMgr + MNodeDimension_x) = onvalue;
+        *(float*)(pHeadShotMgr + MNodeDimension_y) = onvalue;
+        *(float*)(pHeadShotMgr + MNodeDimension_z) = onvalue;
+        }   
+        else
+        {
+        int offvalue = 18.0f;
+        *(float*)(pHeadShotMgr + MNodeDimension_x) = offvalue;
+        *(float*)(pHeadShotMgr + MNodeDimension_y) = offvalue;
+        *(float*)(pHeadShotMgr + MNodeDimension_z) = offvalue;
+        }
+        /////////////////////////////////////AUTO HEADSHOT////////////////////////////////////////
+        for(int y=0;y<54;y++)
+        {   
+        DWORD Weapon = *(DWORD*)(WeaponMgr + (4*y));
+        DWORD pModelNodeType = ( DWORD )( pHeadShotMgr + y * 0x9C );
+        if(pModelNodeType !=0)
+        {       
+        if(GetAsyncKeyState(VK_F4) &1) AutoHead=(!AutoHead);
+        if(AutoHead)
+        {
+        *(int*)( pModelNodeType + 0x54) = 1;//    1 = Golden ,  2 = Silver
+        }
+        else
+        {
+        *(int*)(pModelNodeType + 0x54) = 0;
+        }
+        //////////////////////////////////NO FALL DAMAGE//////////////////////////////////////////
+        DWORD NoFallDamage = *(DWORD*)(oCShell + FallDamage);
+        if(NFD)
+        {
+        *(float*)(NoFallDamage + FallDamageOffset) = 0;
+        }
+        //////////////////////////////////NO BUG DAMAGE//////////////////////////////////////////
+        if(NBD)
+        {
+            *(float*)(VisibleZoneIndex + oCShell + 28) = 0;
+            *(float*)(DamagePerSec + oCShell + 28) =0;
+        }
+        /////////////////////////SHOOT THROUGH WALL///////////////////////////
+        DWORD WallClass = *(DWORD*)(oCShell + WallMgr);
+        for(int j=0;j<64;j++)
+        {
+        if(GetAsyncKeyState(VK_F5) &1) STWS=(!STWS);
+        if(STWS)
+        {
+           
+       
+        *(float*)(WallClass+(j*Texture)+EdgeShotEnabled) = (float)1;
+        *(float*)(WallClass+(j*Texture)+PerfectWallShotEnabled) = (float)1;
+        *(float*)(WallClass+(j*Texture)+WallShotEnabled) = (float)1;
+        }
+        else
+        {
+        *(float*)(WallClass+(j*Texture)+EdgeShotEnabled) = (float)0;
+        *(float*)(WallClass+(j*Texture)+PerfectWallShotEnabled) = (float)0;
+        *(float*)(WallClass+(j*Texture)+WallShotEnabled) = (float)0;
+        }
+        }
+       
+            DWORD pCLTPlayerClient = *(DWORD*)(oCShell + dw_pCLTPLayerClient);//
+        //DWORD WeaponA = *(DWORD*)( WeaponMgr+(4*m));
+            if(pCLTPlayerClient != 0)
+            {
+                for(int m=0;m<0x1FF;m++)
+        {
+            if (*(float*)(pCLTPlayerClient + 4*m) == 140)
+            {
+        if(GetAsyncKeyState(VK_F6)&1) NR=(!NR);
+        if(NR)
+        {
+           
+           
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+    bool MyGameHookA()
+    {
+    if (GetModuleHandleA("CShell.dll") != NULL && GetModuleHandleA("ClientFx.fxd") != NULL)
+            return true;
+        return false;
+    }
+
+    void Starter(void)
+    {
+        while (!MyGameHookA())
+            Sleep(200);
+        {
+            while (true)
+                Hack();
+        }
+    }
+
+
+    extern "C" __declspec (dllexport)BOOL WINAPI DllMain(HMODULE hDLL, DWORD dwReason, LPVOID lpReserved)
+    {
+        if (dwReason == DLL_PROCESS_ATTACH)
+        {
+            DisableThreadLibraryCalls(hDLL);
+            MessageBoxA(0,"zNova","2015", 0);
+            CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Starter,hDLL, NULL, NULL);
+        }
+        return true;
+    }

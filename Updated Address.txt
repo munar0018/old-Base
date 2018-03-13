@@ -1,0 +1,16 @@
+//0x4753F4-wallarray
+//0x229445C-ModelNode
+//0x2294530-WeaponMgr
+0x1096404-aLTClientShell
+0x10938B4-aLTModel
+0x10938D8-aCLTPlayerClient
+0x2294518-WallClass
+0x10938AC-ILTClient
+0x10938B0-ILTCommon
+0x10938B4-ILTPhysics
+0x10938C0-ILTModelClient
+0x10938C4-ILTSoundMgr
+0x10938C8-ILTFontManager
+0x10938D0-ILTWidgetManager
+0x10938CC-ILTRenderMgr
+0x108FC70-ILTVideoMgr
